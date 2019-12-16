@@ -12,8 +12,6 @@ import (
 	"encoding/asn1"
 	"encoding/base64"
 	"errors"
-	"github.com/davecgh/go-spew/spew"
-	log "github.com/sirupsen/logrus"
 	"hash"
 	"path/filepath"
 
@@ -70,19 +68,6 @@ type Salt struct {
 type SaltValue struct {
 	EntrySalt  []byte
 	Iterations int
-}
-
-// dump exists only for debugging.
-func dump(val interface{}, residue []byte) {
-	if !log.IsLevelEnabled(log.DebugLevel) {
-		return
-	}
-	spew.Println("*** VAL ***")
-	spew.Dump(val)
-	if len(residue) > 0 {
-		spew.Println("*** RES ***")
-		spew.Dump(residue)
-	}
 }
 
 // New opens a firefox profile.  Will return error if master key is wrong.
@@ -161,7 +146,6 @@ func (p *Profile) masterKey(db *sql.DB) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.WithField("key", key).Debug("key")
 	return key[:24], nil
 }
 
@@ -210,7 +194,6 @@ func decrypt3DES(globalSalt, masterPassword, entrySalt, ct []byte) ([]byte, erro
 
 	iv := k[len(k)-8:]
 	key := k[:24]
-	log.Debug(spew.Sdump(struct{ iv, key []byte }{iv, key}))
 
 	block, err := des.NewTripleDESCipher(key)
 	if err != nil {
