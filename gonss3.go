@@ -1,14 +1,5 @@
 // Package gonss3 implements the subset of Mozilla NSS3 library. It implements
 // just enough to decrypt the firefox profile passwords.
-//
-// Implementation is entirely based on, I take no credit:
-//   https://github.com/lclevy/firepwd/
-//
-// which is based on [Dr Stephen Henson research for "Netscape Key
-// Databases"][1].
-//
-// Supports only `key4.db` and `json` format of login file, as everything else
-// is obsolete.
 package gonss3
 
 import (

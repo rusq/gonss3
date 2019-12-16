@@ -5,8 +5,7 @@ Package documentation: https://godoc.org/github.com/rusq/gonss3
 Package gonss implements the subset of Mozilla NSS3 library. It implements
 just enough to decrypt the firefox profile passwords.
 
-Implementation is entirely based on, I take no credit:
-  https://github.com/lclevy/firepwd/
+I take no credit, implementation is entirely based on [this project][4]
 
 which is based on [Dr Stephen Henson research for "Netscape Key Databases"][1].
 
@@ -46,3 +45,4 @@ func main() {
 [1]: http://web.archive.org/web/20150212092002/http://www.drh-consultancy.demon.co.uk/key3.html
 [2]: https://github.com/lclevy/firepwd/blob/f48522352c27c8d1868d7a3ad0f5e3da3b1b922d/mozilla_pbe.pdf
 [3]: https://github.com/philsmd/pswRecovery4Moz/blob/master/pswRecovery4Moz.txt
+[4]: https://github.com/lclevy/firepwd/
