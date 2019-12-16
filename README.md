@@ -8,8 +8,7 @@ just enough to decrypt the firefox profile passwords.
 I take no credit, implementation is entirely based on [this project][4] which
 is based on [Dr Stephen Henson research for "Netscape Key Databases"][1].
 
-Supports only `key4.db` and `json` format of login file, as everything else is
-obsolete.
+Supports only `key4.db` (sqlite).
 
 This library is created for educational purposes and licenced under LGPL 3.0.
 
