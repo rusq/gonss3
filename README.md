@@ -5,9 +5,8 @@ Package documentation: https://godoc.org/github.com/rusq/gonss3
 Package gonss implements the subset of Mozilla NSS3 library. It implements
 just enough to decrypt the firefox profile passwords.
 
-I take no credit, implementation is entirely based on [this project][4]
-
-which is based on [Dr Stephen Henson research for "Netscape Key Databases"][1].
+I take no credit, implementation is entirely based on [this project][4] which
+is based on [Dr Stephen Henson research for "Netscape Key Databases"][1].
 
 Supports only `key4.db` and `json` format of login file, as everything else is
 obsolete.
