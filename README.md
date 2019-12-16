@@ -1,5 +1,7 @@
 # gonss3
 
+Package documentation: https://godoc.org/github.com/rusq/gonss3
+
 Package gonss implements the subset of Mozilla NSS3 library. It implements
 just enough to decrypt the firefox profile passwords.
 
