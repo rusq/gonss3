@@ -15,10 +15,13 @@ import (
 	"hash"
 	"path/filepath"
 
+	// need this to read the key file database
 	_ "github.com/mattn/go-sqlite3"
 )
 
 const keyDbName = "key4.db"
+
+const passwordCheck = "password-check\x02\x02"
 
 // Profile is the Firefox profile.
 type Profile struct {
@@ -96,16 +99,14 @@ func New(profilePath string, masterPassword []byte) (*Profile, error) {
 func (p *Profile) isMasterPassValid(db *sql.DB, masterPassword []byte) error {
 	const stmt = `SELECT item1,item2 FROM metadata WHERE id = 'password'`
 	row := db.QueryRow(stmt)
-	var (
-		item2 []byte
-	)
+
+	var item2 []byte
 	if err := row.Scan(&p.globalSalt, &item2); err != nil {
 		return err
 	}
 
 	var keyData MasterKey
-	_, err := asn1.Unmarshal(item2, &keyData)
-	if err != nil {
+	if _, err := asn1.Unmarshal(item2, &keyData); err != nil {
 		return err
 	}
 
@@ -113,7 +114,7 @@ func (p *Profile) isMasterPassValid(db *sql.DB, masterPassword []byte) error {
 	if err != nil {
 		return err
 	}
-	if bytes.Compare(pt, []byte("password-check\x02\x02")) != 0 {
+	if bytes.Compare(pt, []byte(passwordCheck)) != 0 {
 		return errors.New("invalid master password")
 	}
 	// master password ok
@@ -123,16 +124,16 @@ func (p *Profile) isMasterPassValid(db *sql.DB, masterPassword []byte) error {
 }
 
 func (p *Profile) masterKey(db *sql.DB) ([]byte, error) {
-	const stmt = `SELECT a11,a102 FROM nssPrivate`
+	const stmt = `SELECT a11 FROM nssPrivate`
 
-	var a11, a102 []byte
+	var a11 []byte
 	rows, err := db.Query(stmt)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
-		rows.Scan(&a11, &a102)
+		rows.Scan(&a11)
 		if a11 != nil {
 			break
 		}
@@ -180,8 +181,8 @@ func hmacHash(h func() hash.Hash, key []byte, data []byte) []byte {
 	return hasher.Sum(nil)
 }
 
-// decrypt3DES decrypts the ciphertext provided salts and master pwd
-//
+// decrypt3DES decrypts the ciphertext provided salts and master pwd.
+// Returns plain text and error.
 func decrypt3DES(globalSalt, masterPassword, entrySalt, ct []byte) ([]byte, error) {
 	hp := sha1.Sum(append(globalSalt, masterPassword...))
 	chp := sha1.Sum(append(hp[:], entrySalt...))
